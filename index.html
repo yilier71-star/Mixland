@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101020">
+<title>MIXLAND</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101020;color:white;font-family:Arial,sans-serif}
+header{padding:22px 18px;background:#191932;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:28px;font-weight:bold;color:#b99aff}
+.logo span{color:white}
+main{padding:18px;max-width:650px;margin:auto}
+h2{margin-top:28px}
+p{color:#c6c4d5}
+.tabs{display:flex;gap:8px;overflow:auto;padding:15px 0}
+button{border:0;border-radius:12px;padding:12px 16px;background:#29294b;color:white;font-size:15px;cursor:pointer}
+button.active,.primary{background:#8655e8}
+.section{display:none}
+.section.active{display:block}
+.card{background:#1d1d38;border-radius:16px;padding:16px;margin:13px 0}
+.card h3{margin-top:0}
+video{width:100%;border-radius:12px;background:#080812;max-height:380px}
+input[type=file]{width:100%;padding:12px;background:#29294b;border-radius:10px;color:white}
+.story{border-left:4px solid #a77cff}
+footer{text-align:center;color:#888;padding:30px}
+#result{font-size:20px;color:#c6a6ff}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">MIX<span>LAND</span></div>
+ <span>🌎 Todo en un lugar</span>
+</header>
+
+<main>
+<h2>¡Bienvenido a MIXLAND! 🎉</h2>
+<p>Videos, historias y juegos para todos.</p>
+
+<div class="tabs">
+<button class="active" onclick="show('inicio',this)">🏠 Inicio</button>
+<button onclick="show('videos',this)">🎬 Videos</button>
+<button onclick="show('historias',this)">📖 Historias</button>
+<button onclick="show('juegos',this)">🎮 Juegos</button>
+</div>
+
+<section id="inicio" class="section active">
+<div class="card">
+<h3>✨ Descubre MIXLAND</h3>
+<p>Un mundo de entretenimiento donde siempre hay algo nuevo.</p>
+</div>
+<div class="card">
+<h3>🎬 Videos</h3>
+<p>Comparte y disfruta videos cortos.</p>
+<button class="primary" onclick="show('videos',document.querySelectorAll('.tabs button')[1])">Entrar a videos</button>
+</div>
+<div class="card">
+<h3>📖 Historias</h3>
+<p>Historias emocionantes para disfrutar.</p>
+<button class="primary" onclick="show('historias',document.querySelectorAll('.tabs button')[2])">Leer historias</button>
+</div>
+<div class="card">
+<h3>🎮 Juegos</h3>
+<p>Diviértete con nuestros juegos.</p>
+<button class="primary" onclick="show('juegos',document.querySelectorAll('.tabs button')[3])">Jugar ahora</button>
+</div>
+</section>
+
+<section id="videos" class="section">
+<h2>🎬 Zona de videos</h2>
+<div class="card">
+<h3>Selecciona un video de tu celular</h3>
+<input type="file" id="videoFile" accept="video/*">
+<div id="preview"></div>
+<p>Por ahora podrás reproducirlo en tu dispositivo.</p>
+</div>
+</section>
+
+<section id="historias" class="section">
+<h2>📖 Mundo de historias</h2>
+<div class="card story">
+<h3>El secreto inesperado</h3>
+<p>Una joven recibió una carta misteriosa que cambiaría su vida para siempre. Pero lo que descubrió al abrirla fue mucho más grande de lo que imaginaba...</p>
+</div>
+<div class="card story">
+<h3>Una amistad verdadera</h3>
+<p>Dos amigos aprendieron que estar juntos en los momentos difíciles vale más que cualquier riqueza.</p>
+</div>
+<div class="card story">
+<h3>El sueño de un niño</h3>
+<p>Un pequeño soñaba con cambiar el mundo. Aunque muchos no creían en él, nunca dejó de intentarlo.</p>
+</div>
+</section>
+
+<section id="juegos" class="section">
+<h2>🎮 Adivina el número</h2>
+<div class="card">
+<p>Estoy pensando en un número del 1 al 10. ¿Puedes adivinarlo?</p>
+<input id="guess" type="number" min="1" max="10" placeholder="Escribe un número">
+<br><br>
+<button class="primary" onclick="play()">Comprobar</button>
+<p id="result"></p>
+<button onclick="resetGame()">Volver a jugar</button>
+</div>
+</section>
+</main>
+
+<footer>© 2026 MIXLAND | Diversión para todos 🌎</footer>
+
+<script>
+function show(id,button){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ button.classList.add('active');
+}
+let number=Math.floor(Math.random()*10)+1;
+function play(){
+ let value=Number(document.getElementById('guess').value);
+ let result=document.getElementById('result');
+ if(value<1||value>10){result.textContent='Escribe un número del 1 al 10.';return}
+ if(value===number){result.textContent='🎉 ¡Ganaste! ¡Muy bien!';}
+ else if(value<number){result.textContent='Intenta con un número más alto.';}
+ else{result.textContent='Intenta con un número más bajo.';}
+}
+function resetGame(){
+ number=Math.floor(Math.random()*10)+1;
+ document.getElementById('guess').value='';
+ document.getElementById('result').textContent='¡Nuevo número! Inténtalo.';
+}
+document.getElementById('videoFile').addEventListener('change',function(){
+ const file=this.files[0];
+ if(!file)return;
+ const url=URL.createObjectURL(file);
+ document.getElementById('preview').innerHTML='<video controls></video><p>'+file.name+'</p>';
+ document.querySelector('#preview video').src=url;
+});
+</script>
+</body>
+</html>
